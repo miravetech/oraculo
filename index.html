@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>¿Qué diría Dios de esto?</title>
+<style>
+  :root {
+    --bg:#f6f3ec;
+    --ink:#1d1d1b;
+    --muted:#7a766f;
+    --line:#d9d3c8;
+  }
+  * { box-sizing:border-box; }
+  body {
+    margin:0;
+    min-height:100vh;
+    display:grid;
+    place-items:center;
+    background:var(--bg);
+    color:var(--ink);
+    padding:28px;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+  }
+  .wrap {
+    width:min(680px,100%);
+    text-align:center;
+  }
+  .title {
+    margin:0 0 10px;
+    font-size:clamp(28px,6vw,48px);
+    line-height:1.05;
+    font-weight:700;
+    letter-spacing:-0.03em;
+  }
+  .subtitle {
+    margin:0 0 52px;
+    color:var(--muted);
+    font-size:14px;
+  }
+  .verse {
+    margin:0 auto 18px;
+    max-width:600px;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size:clamp(26px,5vw,42px);
+    line-height:1.25;
+    font-weight:400;
+  }
+  .ref {
+    margin-bottom:42px;
+    color:var(--muted);
+    font-size:14px;
+    letter-spacing:.04em;
+  }
+  button {
+    appearance:none;
+    border:1px solid var(--ink);
+    background:transparent;
+    color:var(--ink);
+    padding:14px 20px;
+    border-radius:999px;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.15s ease;
+  }
+  button:hover {
+    background:var(--ink);
+    color:var(--bg);
+  }
+  .fineprint {
+    margin-top:18px;
+    color:var(--muted);
+    font-size:12px;
+  }
+</style>
+</head>
+<body>
+  <main class="wrap">
+    <h1 class="title">¿Qué diría Dios de esto?</h1>
+    <p class="subtitle">Consulta espiritual con sesgo de confirmación incluido.</p>
+
+    <blockquote class="verse" id="verse"></blockquote>
+    <div class="ref" id="ref"></div>
+
+    <button id="again">Este no me conviene. Siguiente.</button>
+    <div class="fineprint">Puedes insistir hasta que salga uno que confirme lo que ya pensabas.</div>
+  </main>
+
+<script>
+const verses = [{"ref": "Génesis 18:14", "text": "¿Hay algo demasiado difícil para Dios?"}, {"ref": "Génesis 21:6", "text": "A veces la risa llega después de lo improbable."}, {"ref": "Génesis 28:15", "text": "No estás abandonado en el camino."}, {"ref": "Génesis 31:49", "text": "Que Dios vigile entre tú y yo cuando estemos lejos."}, {"ref": "Génesis 39:2", "text": "Incluso en terreno ajeno, algo puede prosperar."}, {"ref": "Éxodo 14:14", "text": "Hay batallas en las que tu parte es dejar de pelear."}, {"ref": "Éxodo 14:21", "text": "A veces el camino aparece cuando parecía no existir."}, {"ref": "Éxodo 33:14", "text": "Mi presencia irá contigo y te dará descanso."}, {"ref": "Números 6:24-26", "text": "Que seas guardado, mirado con favor y llevado a la paz."}, {"ref": "Deuteronomio 1:31", "text": "Has sido sostenido más veces de las que recuerdas."}, {"ref": "Deuteronomio 2:7", "text": "No te ha faltado lo necesario durante el camino."}, {"ref": "Deuteronomio 31:6", "text": "Sé firme: no estás solo ante esto."}, {"ref": "Josué 1:9", "text": "Sé fuerte; no dejes que el miedo mande."}, {"ref": "Josué 3:5", "text": "Prepárate: mañana puede pasar algo inesperado."}, {"ref": "Josué 24:15", "text": "Hay momentos en que toca elegir a quién vas a servir."}, {"ref": "Jueces 6:12", "text": "Puede que seas más fuerte de lo que estás suponiendo."}, {"ref": "Rut 1:16", "text": "Hay personas con las que el camino se vuelve compartido."}, {"ref": "1 Samuel 3:10", "text": "Habla: estoy escuchando."}, {"ref": "1 Samuel 16:7", "text": "Las apariencias no son el criterio definitivo."}, {"ref": "1 Samuel 17:47", "text": "No todo se decide por la fuerza visible."}, {"ref": "2 Samuel 22:30", "text": "Con ayuda, incluso un muro puede dejar de ser muro."}, {"ref": "1 Reyes 19:12", "text": "No todo mensaje importante llega haciendo ruido."}, {"ref": "2 Reyes 6:16", "text": "Puede haber más a tu favor de lo que alcanzas a ver."}, {"ref": "1 Crónicas 16:11", "text": "Busca fuerza antes de insistir por inercia."}, {"ref": "2 Crónicas 20:17", "text": "A veces toca colocarse, observar y no resolverlo todo tú."}, {"ref": "Nehemías 8:10", "text": "La alegría también puede ser una forma de fuerza."}, {"ref": "Ester 4:14", "text": "Quizá hayas llegado hasta aquí precisamente para este momento."}, {"ref": "Job 8:7", "text": "Un comienzo pequeño no obliga a un final pequeño."}, {"ref": "Job 11:18", "text": "La esperanza puede hacerte descansar sin vigilarlo todo."}, {"ref": "Job 14:7", "text": "Incluso lo cortado puede volver a brotar."}, {"ref": "Job 19:25", "text": "No todo está perdido porque ahora no veas el desenlace."}, {"ref": "Salmo 3:3", "text": "Tu dignidad no depende de cómo vaya hoy."}, {"ref": "Salmo 4:8", "text": "Puedes descansar sin tenerlo todo resuelto."}, {"ref": "Salmo 16:6", "text": "Tal vez te haya tocado una parte mejor de la que crees."}, {"ref": "Salmo 18:29", "text": "Hay obstáculos que parecen más sólidos antes de acercarte."}, {"ref": "Salmo 23:1", "text": "No necesitas perseguirlo todo a la vez."}, {"ref": "Salmo 23:4", "text": "Atravesar algo oscuro no significa estar perdido."}, {"ref": "Salmo 27:1", "text": "No conviertas el miedo en autoridad."}, {"ref": "Salmo 30:5", "text": "Una noche mala no es una profecía."}, {"ref": "Salmo 32:8", "text": "Puede haber dirección incluso cuando tú no la ves clara."}, {"ref": "Salmo 34:4", "text": "El miedo también puede ser respondido."}, {"ref": "Salmo 34:8", "text": "Hay cosas que solo se entienden después de probarlas."}, {"ref": "Salmo 37:5", "text": "Entrega el camino; no controles también el resultado."}, {"ref": "Salmo 40:1", "text": "Esperar no siempre significa estar perdiendo el tiempo."}, {"ref": "Salmo 42:5", "text": "No des por definitiva una emoción pasajera."}, {"ref": "Salmo 46:1", "text": "En la dificultad también existe un lugar donde apoyarse."}, {"ref": "Salmo 46:10", "text": "Deja de empujar un momento."}, {"ref": "Salmo 55:22", "text": "No todo peso te corresponde cargarlo entero."}, {"ref": "Salmo 56:3", "text": "Tener miedo y confiar pueden ocurrir a la vez."}, {"ref": "Salmo 62:1", "text": "El descanso también puede ser una respuesta."}, {"ref": "Salmo 66:12", "text": "Has pasado por fuego y agua antes de llegar aquí."}, {"ref": "Salmo 73:26", "text": "Cuando fallan tus fuerzas, eso no significa que todo falle."}, {"ref": "Salmo 84:11", "text": "No todo lo bueno necesita llegar con castigo incluido."}, {"ref": "Salmo 90:12", "text": "Recuerda que tu tiempo es limitado antes de gastarlo en tonterías."}, {"ref": "Salmo 91:1", "text": "Quizá ahora lo sensato sea refugiarte, no exponerte más."}, {"ref": "Salmo 94:19", "text": "Una mente llena de ruido también puede recibir consuelo."}, {"ref": "Salmo 103:2", "text": "No olvides lo que sí ha funcionado."}, {"ref": "Salmo 118:24", "text": "Este día no necesita parecerse al de ayer."}, {"ref": "Salmo 119:105", "text": "No necesitas ver toda la ruta para dar el siguiente paso."}, {"ref": "Salmo 121:1-2", "text": "La ayuda puede venir de fuera de tu propio control."}, {"ref": "Salmo 126:5", "text": "Lo que hoy cuesta puede no ser estéril."}, {"ref": "Salmo 127:2", "text": "Hay esfuerzos que pierden sentido cuando no sabes parar."}, {"ref": "Salmo 139:23", "text": "Mira dentro, pero no conviertas la introspección en tortura."}, {"ref": "Proverbios 3:5", "text": "No hagas de tu propia interpretación la única versión posible."}, {"ref": "Proverbios 3:6", "text": "Incluye aquello importante antes de decidir el rumbo."}, {"ref": "Proverbios 4:23", "text": "Protege el centro desde el que estás tomando decisiones."}, {"ref": "Proverbios 10:19", "text": "Hablar más no siempre aclara más."}, {"ref": "Proverbios 11:14", "text": "Pedir consejo no te hace menos capaz."}, {"ref": "Proverbios 12:25", "text": "La preocupación pesa; una buena palabra puede cambiar el día."}, {"ref": "Proverbios 13:12", "text": "La espera alargada desgasta incluso cuando tiene sentido."}, {"ref": "Proverbios 14:15", "text": "No todo lo que parece convincente merece ser creído."}, {"ref": "Proverbios 15:1", "text": "Una respuesta suave puede evitar una guerra innecesaria."}, {"ref": "Proverbios 16:3", "text": "Pon tu trabajo en manos de algo más grande que tu obsesión por controlarlo."}, {"ref": "Proverbios 16:9", "text": "Puedes hacer planes y aun así acabar por otra ruta."}, {"ref": "Proverbios 17:17", "text": "La compañía verdadera se nota especialmente cuando la cosa se complica."}, {"ref": "Proverbios 18:10", "text": "Busca refugio antes de intentar demostrar fortaleza."}, {"ref": "Proverbios 19:21", "text": "Tener muchos planes no garantiza que ese sea el camino."}, {"ref": "Proverbios 20:24", "text": "No siempre entenderás por qué vas por aquí mientras vas."}, {"ref": "Proverbios 21:2", "text": "Que algo te parezca correcto no lo vuelve automáticamente correcto."}, {"ref": "Proverbios 24:16", "text": "Caer varias veces no invalida levantarse otra vez."}, {"ref": "Proverbios 27:17", "text": "Hay personas que te afilan, aunque a veces moleste."}, {"ref": "Eclesiastés 3:1", "text": "Todo tiene su tiempo; quizá esto no sea para ahora."}, {"ref": "Eclesiastés 3:4", "text": "También existe un tiempo legítimo para reírse de todo esto."}, {"ref": "Eclesiastés 3:6", "text": "Hay un tiempo para buscar y otro para dejar de buscar."}, {"ref": "Eclesiastés 3:7", "text": "Hay un tiempo para hablar y otro para cerrar la boca."}, {"ref": "Eclesiastés 7:8", "text": "El final de algo puede ser mejor que su comienzo."}, {"ref": "Eclesiastés 7:9", "text": "No tengas tanta prisa por enfadarte."}, {"ref": "Eclesiastés 11:4", "text": "Si esperas condiciones perfectas, quizá no empieces nunca."}, {"ref": "Cantar de los Cantares 2:11-12", "text": "Después del invierno también cambia la estación."}, {"ref": "Isaías 30:15", "text": "La calma puede hacer más por ti que otra ronda de esfuerzo."}, {"ref": "Isaías 40:31", "text": "Esperar también puede renovar fuerzas."}, {"ref": "Isaías 41:10", "text": "No conviertas este momento en prueba de que no puedes."}, {"ref": "Isaías 43:2", "text": "Pasar por algo no significa quedarte allí."}, {"ref": "Isaías 43:19", "text": "Puede estar empezando algo nuevo sin que todavía lo reconozcas."}, {"ref": "Isaías 54:10", "text": "Hay vínculos y apoyos que sobreviven al movimiento de las cosas."}, {"ref": "Isaías 55:8-9", "text": "Quizá tu lógica no sea la única lógica en juego."}, {"ref": "Isaías 58:11", "text": "Puede haber dirección incluso en lugares secos."}, {"ref": "Jeremías 17:7", "text": "Apoyarte en algo fiable cambia la forma de atravesar la incertidumbre."}, {"ref": "Jeremías 29:11", "text": "El futuro no tiene por qué estar conspirando contra ti."}, {"ref": "Jeremías 33:3", "text": "Pregunta; quizá todavía no sabes todo lo que necesitas saber."}, {"ref": "Lamentaciones 3:22-23", "text": "Mañana no tiene obligación de repetir hoy."}, {"ref": "Ezequiel 36:26", "text": "A veces hace falta un corazón distinto, no un argumento mejor."}, {"ref": "Daniel 3:25", "text": "En el fuego puede aparecer compañía inesperada."}, {"ref": "Daniel 6:22", "text": "No todo peligro termina mordiéndote."}, {"ref": "Oseas 6:3", "text": "Sigue adelante: algunas cosas llegan con la constancia."}, {"ref": "Joel 2:25", "text": "No todo tiempo perdido queda necesariamente perdido."}, {"ref": "Amós 5:24", "text": "Que la justicia no sea solo una idea bonita."}, {"ref": "Jonás 2:2", "text": "También se puede pedir ayuda desde un lugar absurdo."}, {"ref": "Miqueas 6:8", "text": "Haz lo justo, sé amable y baja un poco el ego."}, {"ref": "Habacuc 2:3", "text": "Si tarda, espera; no todo retraso es un fracaso."}, {"ref": "Habacuc 3:17-18", "text": "Incluso si el panorama es malo, todavía puedes decidir cómo estar en él."}, {"ref": "Sofonías 3:17", "text": "También puedes ser recibido con alegría, no solo evaluado."}, {"ref": "Zacarías 4:6", "text": "No todo se resuelve a base de fuerza."}, {"ref": "Mateo 5:9", "text": "A veces ganar consiste en no alimentar el conflicto."}, {"ref": "Mateo 5:14", "text": "No te escondas tanto que luego nadie pueda encontrarte."}, {"ref": "Mateo 6:21", "text": "Mira dónde está yendo tu atención: probablemente ahí está tu prioridad real."}, {"ref": "Mateo 6:26", "text": "Tal vez estés intentando controlar cosas que funcionan sin tu supervisión."}, {"ref": "Mateo 6:34", "text": "No vivas hoy el problema de mañana por adelantado."}, {"ref": "Mateo 7:7", "text": "Pregunta, busca, llama: alguna puerta requiere insistencia."}, {"ref": "Mateo 7:16", "text": "Mira los frutos antes que las promesas."}, {"ref": "Mateo 7:24", "text": "Construye sobre algo que aguante cuando venga el mal tiempo."}, {"ref": "Mateo 10:14", "text": "También existe el momento de sacudirse el polvo y seguir."}, {"ref": "Mateo 11:28", "text": "Si estás agotado, quizá la respuesta no sea esforzarte más."}, {"ref": "Mateo 17:20", "text": "Algo pequeño puede mover más de lo que parece."}, {"ref": "Mateo 19:26", "text": "Que tú no veas cómo no significa que no haya forma."}, {"ref": "Mateo 22:39", "text": "Inclúyete a ti mismo cuando hables de tratar bien a los demás."}, {"ref": "Mateo 25:21", "text": "Ser fiel en lo pequeño también cuenta."}, {"ref": "Mateo 26:41", "text": "Tener buena intención no te vuelve inmune al cansancio."}, {"ref": "Mateo 28:20", "text": "No todo acompañamiento es visible."}, {"ref": "Marcos 4:39", "text": "A veces alguien tiene que decirle al ruido que se calle."}, {"ref": "Marcos 6:31", "text": "Retírate un poco y descansa; también eso está permitido."}, {"ref": "Marcos 8:36", "text": "No compensa ganarlo todo si te pierdes por el camino."}, {"ref": "Marcos 9:23", "text": "No cierres la posibilidad solo porque ahora no la entiendas."}, {"ref": "Marcos 10:27", "text": "Tus límites no son necesariamente los límites de la situación."}, {"ref": "Lucas 1:37", "text": "Lo improbable sigue teniendo una pequeña puerta abierta."}, {"ref": "Lucas 5:4", "text": "Quizá tengas que intentarlo una vez más, pero de otra manera."}, {"ref": "Lucas 6:31", "text": "Haz con los demás lo que luego agradecerías recibir."}, {"ref": "Lucas 8:17", "text": "Lo oculto tiende a dejar de estar oculto."}, {"ref": "Lucas 10:41-42", "text": "Estás preocupándote por muchas cosas; quizá no todas importan igual."}, {"ref": "Lucas 12:25", "text": "Preocuparte muchísimo no añade tiempo."}, {"ref": "Lucas 15:20", "text": "Algunas vueltas a casa terminan en abrazo, no en juicio."}, {"ref": "Lucas 18:27", "text": "Lo imposible para ti no agota todas las opciones."}, {"ref": "Juan 1:5", "text": "La oscuridad no siempre consigue apagar la luz."}, {"ref": "Juan 8:12", "text": "Sigue la luz suficiente para el paso que tienes delante."}, {"ref": "Juan 8:32", "text": "La verdad puede incomodar antes de liberar."}, {"ref": "Juan 10:10", "text": "No todo lo intenso es vida abundante."}, {"ref": "Juan 13:34", "text": "Querer bien sigue siendo una instrucción bastante vigente."}, {"ref": "Juan 14:1", "text": "No dejes que la inquietud decida por ti."}, {"ref": "Juan 14:6", "text": "A veces la pregunta no es solo adónde, sino por qué camino."}, {"ref": "Juan 14:27", "text": "La paz útil no siempre se parece a que todo salga como querías."}, {"ref": "Juan 15:2", "text": "Hay podas que parecen pérdida antes de parecer crecimiento."}, {"ref": "Juan 15:5", "text": "No todo tiene que sostenerse únicamente con tu energía."}, {"ref": "Juan 15:12", "text": "Ama sin convertirlo en una auditoría."}, {"ref": "Juan 16:33", "text": "La dificultad existe; también la posibilidad de no quedar definida por ella."}, {"ref": "Hechos 9:18", "text": "A veces algo cae de los ojos y por fin ves distinto."}, {"ref": "Hechos 20:35", "text": "Dar puede hacerte bien, pero no conviertas eso en desaparecer tú."}, {"ref": "Romanos 5:3-4", "text": "La dificultad puede producir paciencia, aunque sea una forma bastante molesta de aprenderla."}, {"ref": "Romanos 8:18", "text": "No juzgues toda la historia por este capítulo."}, {"ref": "Romanos 8:28", "text": "Incluso cosas torcidas pueden acabar formando parte de algo útil."}, {"ref": "Romanos 8:31", "text": "Si tienes apoyo real, quizá no necesites sentirte tan acorralado."}, {"ref": "Romanos 12:2", "text": "Cambiar de idea también puede ser una forma de renovación."}, {"ref": "Romanos 12:12", "text": "Esperanza, paciencia y constancia: el pack menos glamuroso y más útil."}, {"ref": "Romanos 12:18", "text": "Haz tu parte para la paz; no puedes hacer la del otro."}, {"ref": "Romanos 12:21", "text": "No dejes que lo malo decida en qué te conviertes."}, {"ref": "1 Corintios 6:12", "text": "Que algo sea posible no significa que te convenga."}, {"ref": "1 Corintios 10:13", "text": "Si esto aprieta, busca también la salida."}, {"ref": "1 Corintios 13:4", "text": "El amor paciente es menos espectacular y más sostenible."}, {"ref": "1 Corintios 13:7", "text": "Querer a alguien no significa negar la realidad."}, {"ref": "1 Corintios 14:33", "text": "Si todo es confusión permanente, quizá convenga revisar algo."}, {"ref": "1 Corintios 16:14", "text": "Hazlo con amor; no necesariamente con drama."}, {"ref": "2 Corintios 4:8-9", "text": "Estar presionado no equivale a estar derrotado."}, {"ref": "2 Corintios 5:7", "text": "No vas a tener pruebas visibles para cada paso."}, {"ref": "2 Corintios 12:9", "text": "No necesitas estar en tu mejor versión para que algo valioso ocurra."}, {"ref": "Gálatas 5:1", "text": "Si ya eres libre, no vuelvas voluntariamente a la cadena."}, {"ref": "Gálatas 5:22-23", "text": "Si produce paz, paciencia y bondad, probablemente es una pista."}, {"ref": "Gálatas 6:9", "text": "No abandones solo porque todavía no llegó la recompensa."}, {"ref": "Efesios 4:2", "text": "Humildad y paciencia: dos recursos infrautilizados."}, {"ref": "Efesios 4:26", "text": "Enfádate si hace falta; no construyas una casa ahí."}, {"ref": "Efesios 4:32", "text": "La bondad sigue siendo una estrategia sorprendentemente eficaz."}, {"ref": "Efesios 5:15", "text": "Mira bien cómo estás viviendo; el piloto automático también decide."}, {"ref": "Efesios 6:10", "text": "Busca fuerza antes de volver al combate."}, {"ref": "Filipenses 1:6", "text": "Que algo esté incompleto no significa que esté fracasado."}, {"ref": "Filipenses 2:3", "text": "No conviertas cada situación en una competición silenciosa."}, {"ref": "Filipenses 4:4", "text": "La alegría no tiene que esperar a que todo esté resuelto."}, {"ref": "Filipenses 4:6-7", "text": "Antes de rumiar otra hora, prueba a soltar la petición."}, {"ref": "Filipenses 4:8", "text": "Tu atención también necesita una dieta."}, {"ref": "Filipenses 4:11", "text": "Aprender a estar bien no siempre depende de cambiar de escenario."}, {"ref": "Filipenses 4:13", "text": "Quizá puedas con esto; no necesariamente de la forma que imaginabas."}, {"ref": "Colosenses 3:12", "text": "Vístete de paciencia antes de salir a interpretar a los demás."}, {"ref": "Colosenses 3:13", "text": "A veces perdonar es dejar de llevar la cuenta."}, {"ref": "Colosenses 3:23", "text": "Hazlo de corazón; si no, quizá revisa por qué lo haces."}, {"ref": "1 Tesalonicenses 5:16-18", "text": "Alegría, oración y gratitud: el algoritmo antiguo."}, {"ref": "2 Tesalonicenses 3:10", "text": "Hay ocasiones en que la solución incluye ponerse a hacer algo."}, {"ref": "2 Timoteo 1:7", "text": "El miedo no tiene por qué dirigir la reunión."}, {"ref": "2 Timoteo 4:7", "text": "A veces el éxito es haber llegado al final sin abandonar."}, {"ref": "Hebreos 10:23", "text": "No sueltes una esperanza sólida por una emoción de diez minutos."}, {"ref": "Hebreos 11:1", "text": "Hay decisiones que se toman antes de ver el resultado."}, {"ref": "Hebreos 12:1", "text": "Suelta peso si quieres correr mejor."}, {"ref": "Hebreos 12:11", "text": "Lo útil no siempre se siente bien mientras ocurre."}, {"ref": "Hebreos 13:5", "text": "No todo abandono que temes va a suceder."}, {"ref": "Santiago 1:2-3", "text": "La prueba puede producir paciencia; sí, otra vez paciencia."}, {"ref": "Santiago 1:5", "text": "Si no sabes qué hacer, pedir sabiduría sigue siendo una opción."}, {"ref": "Santiago 1:19", "text": "Escucha rápido, habla lento y enfádate todavía más lento."}, {"ref": "Santiago 3:5", "text": "Una cosa pequeña puede incendiar muchísimo."}, {"ref": "Santiago 4:14", "text": "No sabes qué será mañana; quizá no convenga dramatizarlo hoy."}, {"ref": "1 Pedro 5:7", "text": "No cargues con toda la ansiedad como si fuera una obligación moral."}, {"ref": "1 Pedro 5:10", "text": "Después de un tiempo difícil también puede venir firmeza."}, {"ref": "1 Juan 4:18", "text": "Si el miedo gobierna la relación, revisa qué está pasando con el amor."}, {"ref": "1 Juan 4:19", "text": "A veces uno aprende a amar porque antes fue amado."}, {"ref": "Apocalipsis 3:20", "text": "Hay puertas que solo se abren si alguien responde."}, {"ref": "Apocalipsis 21:4", "text": "No todo dolor está destinado a quedarse para siempre."}];
+let last = -1;
+
+function showRandom() {
+  let i;
+  do {
+    i = Math.floor(Math.random() * verses.length);
+  } while (verses.length > 1 && i === last);
+  last = i;
+  document.getElementById('verse').textContent = verses[i].text;
+  document.getElementById('ref').textContent = verses[i].ref;
+}
+
+document.getElementById('again').addEventListener('click', showRandom);
+showRandom();
+</script>
+</body>
+</html>
